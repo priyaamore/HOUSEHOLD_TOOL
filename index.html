@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WattWise – Home Energy Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3ec;--sf:#fff;--sf2:#f5f8f4;--ink:#12261c;--mut:#617467;--line:#dbe5da;--ac:#1c7a4b;--acs:#dcefe2;--hero:#0f3a28;--heroink:#eaf6ee;--amb:#f2a900;--ambs:#fff1cc;--ambt:#7a5400;--bad:#c9432c;--bads:#fbe4de;--sh:0 1px 2px rgba(18,38,28,.06),0 8px 24px -12px rgba(18,38,28,.18);--r:18px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1510;--sf:#14231a;--sf2:#1a2c21;--ink:#e8f1ea;--mut:#8fa596;--line:#26392d;--ac:#5fd08f;--acs:#1c3a29;--hero:#123f2b;--ambs:#3a2c0a;--ambt:#f4c75a;--bad:#ff8c74;--bads:#3d201a;--sh:0 8px 24px -12px rgba(0,0,0,.6)}}
+:root[data-theme="dark"]{--bg:#0b1510;--sf:#14231a;--sf2:#1a2c21;--ink:#e8f1ea;--mut:#8fa596;--line:#26392d;--ac:#5fd08f;--acs:#1c3a29;--hero:#123f2b;--ambs:#3a2c0a;--ambt:#f4c75a;--bad:#ff8c74;--bads:#3d201a;--sh:0 8px 24px -12px rgba(0,0,0,.6)}
+*{box-sizing:border-box}html,body{height:100%}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Bricolage Grotesque","Noto Sans Devanagari",system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100%}
+.side{position:sticky;top:0;height:100vh;padding:22px 14px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;padding:0 8px 18px}
+.logo i{width:34px;height:34px;border-radius:11px;background:var(--hero);display:grid;place-items:center;color:var(--amb)}
+.nb{display:flex;align-items:center;gap:11px;border:0;background:none;padding:10px 12px;border-radius:12px;text-align:left;color:var(--mut);font-weight:600}
+.nb:hover{background:var(--sf2)}.nb[aria-current=page]{background:var(--hero);color:var(--heroink)}
+.main{padding:26px 28px 60px;max-width:960px;width:100%}
+h1{font-size:30px;line-height:1.1;margin:0 0 4px;font-weight:800;letter-spacing:-.03em}h2{font-size:17px;margin:0;font-weight:600}
+.sub{color:var(--mut);margin:0 0 20px}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--sh);margin-bottom:16px}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+.hero{background:var(--hero);color:var(--heroink);border-radius:24px;padding:24px;margin-bottom:16px;display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:center}
+.hero small{opacity:.75}.big{font-size:56px;font-weight:800;letter-spacing:-.04em;line-height:1}.big sup{font-size:22px;color:var(--amb);margin-left:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--sf);border:1px solid var(--line);border-radius:var(--r);padding:14px}.stat b{display:block;font-size:24px;font-weight:800;letter-spacing:-.02em}.stat span{color:var(--mut);font-size:13px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}.row:first-child{border-top:0}
+.ico{width:42px;height:42px;border-radius:13px;background:var(--sf2);display:grid;place-items:center;font-size:21px;flex:none}
+.grow{flex:1;min-width:0}.grow small{display:block;color:var(--mut)}
+.bar{height:8px;background:var(--sf2);border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;border-radius:9px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.chip{font-size:12px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--acs);color:var(--ac)}.chip.hot{background:var(--bads);color:var(--bad)}.chip.warn{background:var(--ambs);color:var(--ambt)}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:600;background:var(--ac);color:var(--sf)}.btn:hover{filter:brightness(1.08)}.btn.soft{background:var(--acs);color:var(--ac)}.btn.amb{background:var(--amb);color:#2b1d00}.btn:disabled{opacity:.6;cursor:default}
+.tg{width:48px;height:28px;border-radius:99px;border:0;background:var(--line);position:relative;flex:none;transition:background .2s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}.tg[aria-checked=true]{background:var(--ac)}.tg[aria-checked=true]::after{transform:translateX(20px)}
+.inp{background:var(--sf2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 10px;font:inherit;width:100%}
+.fl label{display:block;font-size:12px;color:var(--mut);margin-bottom:3px}
+.num{width:84px}
+input[type=range]{width:100%;accent-color:var(--ac);margin-top:6px}
+.drop{border:2px dashed var(--line);border-radius:16px;padding:30px 16px;text-align:center;background:var(--sf2);transition:.2s}.drop.on{border-color:var(--ac);background:var(--acs)}
+.steps{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.notif{background:var(--ambs);border:1px solid var(--amb);border-radius:16px;padding:14px;margin-top:14px;animation:pop .35s ease}
+@keyframes pop{from{transform:translateY(-8px);opacity:0}}
+.up{color:var(--bad);font-weight:700}.dn{color:var(--ac);font-weight:700}
+.toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));display:grid;gap:8px;z-index:30}
+.toast{background:var(--hero);color:var(--heroink);padding:10px 16px;border-radius:12px;box-shadow:var(--sh);animation:pop .25s ease}
+.tabs{display:none}
+@media (max-width:760px){
+.app{display:block}.side{display:none}.main{padding:18px 16px calc(96px + env(safe-area-inset-bottom,0px))}
+.hero,.g2{grid-template-columns:1fr}.big{font-size:46px}.stats{grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{padding:10px}.stat b{font-size:18px}
+.tabs{display:flex;position:fixed;left:0;right:0;bottom:0;background:var(--sf);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));z-index:20}
+.tabs button{flex:1;border:0;background:none;display:grid;justify-items:center;gap:2px;font-size:10.5px;color:var(--mut);padding:4px 0;font-weight:600}.tabs button[aria-current=page]{color:var(--ac)}
+.row{flex-wrap:wrap}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.lsw{display:flex;gap:3px;background:var(--sf2);padding:3px;border-radius:12px;border:1px solid var(--line)}
+.lsw button{border:0;background:none;padding:6px 10px;border-radius:9px;font-weight:600;color:var(--mut)}
+.lsw button[aria-pressed=true]{background:var(--hero);color:var(--heroink)}
+.mtop{display:none}
+@media (max-width:760px){.mtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.mtop .logo{padding:0}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useMemo,useRef,useEffect,useCallback,createContext,useContext}=React;
+const inr=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+const COLORS=["#1c7a4b","#f2a900","#3b8ea5","#c9432c","#8a6fb3","#6aa84f","#d97b8a","#7d8b84"];
+const LANGS=[["en","EN"],["hi","हिन्दी"],["mr","मराठी"]];
+// Each entry: [English, Hindi, Marathi]
+const D={
+nav_dash:["Dashboard","डैशबोर्ड","डॅशबोर्ड"],nav_app:["Appliances","उपकरण","उपकरणे"],nav_rem:["Reminders","रिमाइंडर","स्मरणपत्रे"],nav_bill:["Scan bill","बिल स्कैन","बिल स्कॅन"],nav_cmp:["Compare","तुलना","तुलना"],nav_sav:["Savings","बचत","बचत"],
+hello:["Hello","नमस्ते","नमस्कार"],hello_s:["Here’s how your home is using power this month.","इस महीने आपका घर कितनी बिजली इस्तेमाल कर रहा है।","या महिन्यात तुमचे घर किती वीज वापरत आहे."],
+est_bill:["Estimated bill this month","इस महीने का अनुमानित बिल","या महिन्याचे अंदाजे बिल"],per_unit:["₹{0}/unit","₹{0}/यूनिट","₹{0}/युनिट"],
+top_share:["{0} alone is {1}% of your usage.","अकेला {0} आपके उपयोग का {1}% है।","एकट्या {0} चा वाटा तुमच्या वापराच्या {1}% आहे."],see_save:["See how to save","बचत कैसे करें, देखें","बचत कशी करायची ते पहा"],
+units_kwh:["Units (kWh)","यूनिट (kWh)","युनिट (kWh)"],app_on:["Appliances on","चालू उपकरण","सुरू असलेली उपकरणे"],high_n:["High-usage","अधिक खपत","जास्त वापर"],high_tag:["High usage","अधिक खपत","जास्त वापर"],
+usage_t:["Appliance-wise usage and cost","उपकरण-वार उपयोग और खर्च","उपकरणनिहाय वापर आणि खर्च"],row_line:["{0} kWh · {1} per month · {2}%","{0} kWh · {1} प्रति माह · {2}%","{0} kWh · {1} दरमहा · {2}%"],kwh_mo:["kWh / month","kWh / माह","kWh / महिना"],
+t_app:["Appliances","उपकरण","उपकरणे"],s_app:["Edit power and daily hours. Costs update across the app.","वॉट और रोज़ के घंटे बदलें। खर्च पूरे ऐप में अपडेट होगा।","वॅट आणि रोजचे तास बदला. खर्च संपूर्ण अॅपमध्ये अपडेट होईल."],
+tariff:["Tariff","टैरिफ़","दर (टॅरिफ)"],tariff_n:["Rupees per unit (kWh)","रुपये प्रति यूनिट (kWh)","रुपये प्रति युनिट (kWh)"],devices:["Your devices","आपके उपकरण","तुमची उपकरणे"],
+per_month:["{0} per month","{0} प्रति माह","{0} दरमहा"],watts:["Watts","वॉट","वॅट"],hpd:["Hours/day","घंटे/दिन","तास/दिवस"],is_on:["{0} is on","{0} चालू है","{0} सुरू आहे"],
+t_rem:["Smart reminders","स्मार्ट रिमाइंडर","स्मार्ट स्मरणपत्रे"],s_rem:["Get a nudge when you leave home with something still running.","घर से निकलते समय कुछ चालू रह जाए तो याद दिलाया जाएगा।","घराबाहेर पडताना काही सुरू राहिले तर आठवण दिली जाईल."],
+chk_t:["Leaving-home check","घर से निकलते समय जाँच","घराबाहेर पडतानाची तपासणी"],chk_n:["Uses phone location and smart-plug status. The fridge is skipped because it stays on.","फ़ोन की लोकेशन और स्मार्ट-प्लग की स्थिति का उपयोग होता है। फ्रिज को छोड़ा जाता है क्योंकि वह चालू रहता है।","फोनचे लोकेशन आणि स्मार्ट-प्लगची स्थिती वापरली जाते. फ्रीज वगळला जातो कारण तो सुरूच राहतो."],
+sim:["Simulate leaving home","घर से निकलना आज़माएँ","घराबाहेर पडून पहा"],left_a:["You left home. {0} still on","आप घर से निकल गए। {0} अब भी चालू","तुम्ही घराबाहेर पडलात. {0} अजून सुरू"],
+per_hr:["About {0} per hour","लगभग {0} प्रति घंटा","अंदाजे {0} प्रति तास"],sw_off:["Switch off","बंद करें","बंद करा"],sw_all:["Switch all off","सब बंद करें","सर्व बंद करा"],
+clear:["All clear. Everything switchable is off.","सब ठीक है। सभी उपकरण बंद हैं।","सर्व ठीक आहे. सर्व उपकरणे बंद आहेत."],toast_off:["Switched off","बंद कर दिया","बंद केले"],
+t_bill:["Scan electricity bill","बिजली बिल स्कैन करें","वीज बिल स्कॅन करा"],s_bill:["Upload your bill and we’ll pull out the details.","बिल अपलोड करें, हम विवरण निकाल लेंगे।","बिल अपलोड करा, आम्ही तपशील काढू."],
+drop:["Drop a bill photo or PDF here","बिल की फ़ोटो या PDF यहाँ डालें","बिलाचा फोटो किंवा PDF येथे टाका"],fmt:["JPG, PNG or PDF","JPG, PNG या PDF","JPG, PNG किंवा PDF"],choose:["Choose file","फ़ाइल चुनें","फाइल निवडा"],
+st1:["Uploading","अपलोड हो रहा है","अपलोड होत आहे"],st2:["Reading text","टेक्स्ट पढ़ा जा रहा है","मजकूर वाचत आहे"],st3:["Finding fields","जानकारी खोजी जा रही है","माहिती शोधत आहे"],
+proto:["Prototype: results are sample values. A live build would call an OCR service here.","प्रोटोटाइप: नतीजे नमूना मान हैं। असली ऐप यहाँ OCR सेवा का उपयोग करेगा।","प्रोटोटाइप: निकाल नमुना मूल्ये आहेत. खऱ्या अॅपमध्ये येथे OCR सेवा वापरली जाईल."],
+extr:["Extracted details","निकाला गया विवरण","काढलेला तपशील"],review:["Review before saving","सहेजने से पहले जाँचें","जतन करण्यापूर्वी तपासा"],
+f_units:["Units consumed (kWh)","खपत यूनिट (kWh)","वापरलेली युनिट्स (kWh)"],f_amt:["Bill amount (₹)","बिल राशि (₹)","बिलाची रक्कम (₹)"],f_per:["Billing period","बिलिंग अवधि","बिलिंग कालावधी"],f_due:["Due date","अंतिम तिथि","देय तारीख"],f_cno:["Consumer number","उपभोक्ता क्रमांक","ग्राहक क्रमांक"],
+save_bill:["Save as this month’s bill","इस महीने के बिल के रूप में सहेजें","या महिन्याचे बिल म्हणून जतन करा"],toast_bill:["Bill saved","बिल सहेजा गया","बिल जतन केले"],
+t_cmp:["Compare bills","बिलों की तुलना","बिलांची तुलना"],prev:["Previous","पिछला","मागील"],curr:["Current","वर्तमान","सध्याचे"],c_cpu:["Cost per unit","प्रति यूनिट लागत","प्रति युनिट दर"],side:["Side by side","आमने-सामने","शेजारी-शेजारी"],
+units_c:["Units consumed","खपत यूनिट","वापरलेली युनिट्स"],match_t:["Does your appliance list match the bill?","क्या आपकी उपकरण सूची बिल से मेल खाती है?","तुमची उपकरण यादी बिलाशी जुळते का?"],
+match_b:["Your appliances explain {0} of {1} billed units ({2}%).","आपके उपकरण {1} बिल यूनिट में से {0} का हिसाब देते हैं ({2}%)।","तुमची उपकरणे {1} बिल युनिट्सपैकी {0} चा हिशेब देतात ({2}%)."],
+gap:["Unlisted devices or longer run times could account for the gap.","सूची में न दिए उपकरण या ज़्यादा चलने का समय इस अंतर का कारण हो सकता है।","यादीत नसलेली उपकरणे किंवा जास्त वेळ चालणे यामुळे फरक असू शकतो."],close:["That’s a close match.","यह लगभग मेल खाता है।","हे जवळपास जुळते."],
+p_aug:["Aug 2026","अगस्त 2026","ऑगस्ट 2026"],p_sep:["Sep 2026","सितंबर 2026","सप्टेंबर 2026"],
+t_sav:["Savings calculator","बचत कैलकुलेटर","बचत कॅल्क्युलेटर"],s_sav:["Move a slider to see what switching off for a few hours saves.","स्लाइडर हिलाकर देखें कि कुछ घंटे बंद रखने से कितनी बचत होगी।","स्लायडर हलवून पहा, काही तास बंद ठेवल्यास किती बचत होईल."],
+could:["You could save","आप बचा सकते हैं","तुम्ही वाचवू शकता"],per_mo:["/month","/माह","/महिना"],yr_line:["{0} a year · {1} fewer units a month","साल में {0} · हर महीने {1} यूनिट कम","वर्षाला {0} · दरमहा {1} युनिट कमी"],
+smart:["Apply smart plan","स्मार्ट प्लान लागू करें","स्मार्ट प्लॅन लावा"],toast_plan:["Smart plan applied","स्मार्ट प्लान लागू हुआ","स्मार्ट प्लॅन लागू केला"],cut_t:["Cut daily hours","रोज़ के घंटे घटाएँ","रोजचे तास कमी करा"],reset:["Reset","रीसेट","रीसेट"],
+save_x:["Save {0}","{0} की बचत","{0} बचत"],no_chg:["No change","कोई बदलाव नहीं","बदल नाही"],now_cut:["Now {0} h/day · cutting {1} h","अभी {0} घंटे/दिन · {1} घंटे कम","सध्या {0} तास/दिवस · {1} तास कमी"],
+tips:["Tips for your home","आपके घर के लिए सुझाव","तुमच्या घरासाठी सूचना"],of_use:["{0}% of usage","उपयोग का {0}%","वापराच्या {0}%"],lang:["Language","भाषा","भाषा"],
+n1:["Air conditioner","एयर कंडीशनर","एअर कंडिशनर"],n2:["Ceiling fans (3)","सीलिंग पंखे (3)","सीलिंग पंखे (3)"],n3:["LED lights","एलईडी लाइट","एलईडी दिवे"],n4:["Refrigerator","रेफ्रिजरेटर","रेफ्रिजरेटर"],n5:["Water heater","वॉटर हीटर","वॉटर हीटर"],n6:["Television","टेलीविज़न","टीव्ही"],n7:["Washing machine","वॉशिंग मशीन","वॉशिंग मशीन"],n8:["Laptop & Wi-Fi","लैपटॉप और वाई-फ़ाई","लॅपटॉप आणि वाय-फाय"],
+tip1:["Set 24–26°C and use sleep mode. Each degree higher saves about 6%.","24–26°C पर चलाएँ और स्लीप मोड इस्तेमाल करें। हर एक डिग्री ज़्यादा पर लगभग 6% बचत होती है।","24–26°C वर लावा आणि स्लीप मोड वापरा. प्रत्येक अंश जास्त ठेवल्यास सुमारे 6% बचत होते."],
+tip2:["Switch fans off in empty rooms.","खाली कमरों में पंखे बंद करें।","रिकाम्या खोल्यांमधील पंखे बंद करा."],tip3:["Lights off when leaving a room.","कमरे से निकलते समय लाइट बंद करें।","खोली सोडताना दिवे बंद करा."],
+tip5:["Use a timer so the geyser doesn’t keep running once the water is hot.","टाइमर लगाएँ ताकि पानी गर्म होने के बाद गीज़र चलता न रहे।","टायमर लावा, म्हणजे पाणी गरम झाल्यावर गीझर सुरू राहणार नाही."],
+tip6:["Switch off at the plug instead of standby.","स्टैंडबाय पर छोड़ने के बजाय प्लग से बंद करें।","स्टँडबायवर ठेवण्याऐवजी प्लगमधून बंद करा."],tip8:["Unplug chargers when not in use.","इस्तेमाल न हो तो चार्जर निकाल दें।","वापर नसताना चार्जर काढून ठेवा."]};
+const LC=createContext();
+const useT=()=>useContext(LC);
+const INIT=[
+{id:1,i:"❄️",w:1500,h:6,on:true,s:1,plan:1},{id:2,i:"🌀",w:225,h:10,on:true,s:1,plan:2},{id:3,i:"💡",w:80,h:6,on:true,s:1,plan:1},{id:4,i:"🧊",w:150,h:10,on:true,s:0,plan:0},
+{id:5,i:"🚿",w:2000,h:1.2,on:false,s:1,plan:.5},{id:6,i:"📺",w:100,h:4,on:false,s:1,plan:1},{id:7,i:"🧺",w:500,h:1,on:false,s:0,plan:0},{id:8,i:"💻",w:80,h:8,on:true,s:1,plan:1}];
+const kwh=a=>a.w*a.h*30/1000;
+const Icon=({d,size=20})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d}/></svg>;
+const NAV=[["dash","M3 12l9-9 9 9M5 10v10h14V10"],["app","M13 2L3 14h7l-1 8 10-12h-7z"],["rem","M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"],["bill","M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3M4 12h16"],["cmp","M4 20V10M10 20V4M16 20v-8M22 20H2"],["sav","M12 2v20M17 6H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"]];
+
+function LangSwitch(){const {lang,setLang,t}=useT();return <div className="lsw" role="group" aria-label={t("lang")}>{LANGS.map(([k,l])=><button key={k} aria-pressed={lang===k} onClick={()=>setLang(k)}>{l}</button>)}</div>}
+const Logo=()=><div className="logo"><i><Icon d="M13 2L3 14h7l-1 8 10-12h-7z"/></i>WattWise</div>;
+function Sidebar({tab,go}){const {t}=useT();return <aside className="side"><Logo/>{NAV.map(([k,d])=><button key={k} className="nb" aria-current={tab===k?"page":undefined} onClick={()=>go(k)}><Icon d={d}/>{t("nav_"+k)}</button>)}<div style={{marginTop:"auto"}}><LangSwitch/></div></aside>}
+function TabBar({tab,go}){const {t}=useT();return <nav className="tabs" aria-label="Main">{NAV.map(([k,d])=><button key={k} aria-current={tab===k?"page":undefined} onClick={()=>go(k)}><Icon d={d} size={22}/>{t("nav_"+k).split(" ")[0]}</button>)}</nav>}
+const Card=({title,right,children})=><section className="card">{(title||right)&&<div className="ch"><h2>{title}</h2>{right}</div>}{children}</section>;
+const Header=({t,s})=><header><h1>{t}</h1><p className="sub">{s}</p></header>;
+const Toggle=({on,set,label})=><button role="switch" aria-checked={on} aria-label={label} className="tg" onClick={()=>set(!on)}/>;
+const Stat=({v,l})=><div className="stat"><b>{v}</b><span>{l}</span></div>;
+
+function Donut({items,total}){const {t}=useT();const R=62,C=2*Math.PI*R;let off=0;
+return <svg viewBox="0 0 160 160" width="150" height="150" role="img" aria-label={t("usage_t")}><g transform="rotate(-90 80 80)"><circle cx="80" cy="80" r={R} fill="none" stroke="rgba(255,255,255,.1)" strokeWidth="20"/>
+{items.map((a,i)=>{const len=kwh(a)/total*C,el=<circle key={a.id} cx="80" cy="80" r={R} fill="none" stroke={COLORS[i%8]} strokeWidth="20" strokeDasharray={`${Math.max(len-2,0)} ${C}`} strokeDashoffset={-off}/>;off+=len;return el})}</g>
+<text x="80" y="78" textAnchor="middle" fill="currentColor" fontSize="24" fontWeight="800">{Math.round(total)}</text><text x="80" y="96" textAnchor="middle" fill="currentColor" opacity=".7" fontSize="11">{t("kwh_mo")}</text></svg>}
+
+function UsageRow({a,rank,total,max,tariff}){const {t}=useT();const share=kwh(a)/total,hi=share>.25;
+return <div className="row"><div className="ico">{a.i}</div><div className="grow"><b>{t("n"+a.id)}</b> {hi&&<span className="chip hot">{t("high_tag")}</span>}
+<small>{t("row_line",kwh(a).toFixed(0),inr(kwh(a)*tariff),Math.round(share*100))}</small><div className="bar"><i style={{width:kwh(a)/max*100+"%",background:hi?"var(--bad)":COLORS[rank%8]}}/></div></div></div>}
+
+function Dashboard({A,tariff,go}){const {t}=useT();const s=useMemo(()=>[...A].sort((a,b)=>kwh(b)-kwh(a)),[A]);const T=A.reduce((x,a)=>x+kwh(a),0);const top=s[0];
+return <><Header t={t("hello")} s={t("hello_s")}/>
+<div className="hero"><div><small>{t("est_bill")}</small><div className="big">{inr(T*tariff)}<sup>{t("per_unit",tariff)}</sup></div>
+<p style={{margin:"10px 0 14px",opacity:.85}}>{t("top_share",t("n"+top.id),Math.round(kwh(top)/T*100))}</p><button className="btn amb" onClick={()=>go("sav")}>{t("see_save")}</button></div>
+<div style={{display:"flex",gap:14,alignItems:"center",justifyContent:"center",flexWrap:"wrap"}}><Donut items={s} total={T}/>
+<div style={{fontSize:12,display:"grid",gap:4}}>{s.slice(0,4).map((a,i)=><span key={a.id}><i style={{display:"inline-block",width:9,height:9,borderRadius:3,background:COLORS[i],marginRight:6}}/>{t("n"+a.id).split(" (")[0]}</span>)}</div></div></div>
+<div className="stats"><Stat v={Math.round(T)} l={t("units_kwh")}/><Stat v={A.filter(a=>a.on).length+"/"+A.length} l={t("app_on")}/><Stat v={A.filter(a=>kwh(a)/T>.25).length} l={t("high_n")}/></div>
+<Card title={t("usage_t")}>{s.map((a,i)=><UsageRow key={a.id} a={a} rank={i} total={T} max={kwh(top)} tariff={tariff}/>)}</Card></>}
+
+function Appliances({A,setA,tariff,setTariff}){const {t}=useT();const up=(id,f,v)=>setA(A.map(a=>a.id===id?{...a,[f]:v}:a));
+return <><Header t={t("t_app")} s={t("s_app")}/>
+<Card title={t("tariff")} right={<div className="fl" style={{width:150}}><input className="inp" type="number" step="0.1" aria-label={t("tariff")} value={tariff} onChange={e=>setTariff(+e.target.value||0)}/></div>}><span className="sub" style={{margin:0}}>{t("tariff_n")}</span></Card>
+<Card title={t("devices")}>{A.map(a=><div className="row" key={a.id}><div className="ico">{a.i}</div><div className="grow"><b>{t("n"+a.id)}</b><small>{t("per_month",inr(kwh(a)*tariff))}</small></div>
+<div className="fl"><label>{t("watts")}</label><input className="inp num" type="number" value={a.w} onChange={e=>up(a.id,"w",+e.target.value||0)}/></div>
+<div className="fl"><label>{t("hpd")}</label><input className="inp num" type="number" step="0.5" value={a.h} onChange={e=>up(a.id,"h",+e.target.value||0)}/></div>
+<Toggle on={a.on} set={v=>up(a.id,"on",v)} label={t("is_on",t("n"+a.id))}/></div>)}</Card></>}
+
+function Reminders({A,setA,remOn,setRemOn,toast,tariff}){const {t}=useT();const [left,setLeft]=useState(false);const on=A.filter(a=>a.on&&a.s);
+const off=ids=>{setA(A.map(a=>ids.includes(a.id)?{...a,on:false}:a));toast(t("toast_off"))};
+return <><Header t={t("t_rem")} s={t("s_rem")}/>
+<Card title={t("chk_t")} right={<Toggle on={remOn} set={v=>{setRemOn(v);if(!v)setLeft(false)}} label={t("t_rem")}/>}>
+<p className="sub" style={{margin:"0 0 12px"}}>{t("chk_n")}</p>
+<button className="btn" disabled={!remOn} onClick={()=>setLeft(true)}>{t("sim")}</button>
+{left&&(on.length?<div className="notif" role="alert"><b>{t("left_a",on.length)}</b>
+{on.map(a=><div className="row" key={a.id}><div className="ico">{a.i}</div><div className="grow">{t("n"+a.id)}<small>{t("per_hr",inr(a.w/1000*tariff))}</small></div><button className="btn soft" onClick={()=>off([a.id])}>{t("sw_off")}</button></div>)}
+<button className="btn" style={{marginTop:8}} onClick={()=>off(on.map(a=>a.id))}>{t("sw_all")}</button></div>
+:<div className="notif" style={{background:"var(--acs)",borderColor:"var(--ac)"}}>{t("clear")}</div>)}</Card></>}
+
+function BillScanner({cur,setCur,toast}){const {t}=useT();const [file,setFile]=useState(null),[drag,setDrag]=useState(false),[step,setStep]=useState(-1),[done,setDone]=useState(false),[f,setF]=useState(cur);const ref=useRef();
+const S=["st1","st2","st3"];
+const run=fl=>{setFile(fl);setDone(false);setStep(0);let i=0;const iv=setInterval(()=>{i++;if(i>=3){clearInterval(iv);setStep(3);setDone(true)}else setStep(i)},700)};
+const fld=(k,l,ty="text",c)=><div className="fl" key={k}><label>{t(l)} {done&&<span className="chip" style={{marginLeft:4}}>{c}%</span>}</label><input className="inp" type={ty} value={f[k]} onChange={e=>setF({...f,[k]:ty==="number"?+e.target.value:e.target.value})}/></div>;
+return <><Header t={t("t_bill")} s={t("s_bill")}/>
+<Card><div className={"drop"+(drag?" on":"")} onDragOver={e=>{e.preventDefault();setDrag(true)}} onDragLeave={()=>setDrag(false)} onDrop={e=>{e.preventDefault();setDrag(false);e.dataTransfer.files[0]&&run(e.dataTransfer.files[0])}}>
+<div style={{fontSize:34}}>🧾</div><b>{file?file.name:t("drop")}</b><p className="sub" style={{margin:"4px 0 14px"}}>{t("fmt")}</p>
+<input ref={ref} type="file" accept="image/*,.pdf" hidden onChange={e=>e.target.files[0]&&run(e.target.files[0])}/>
+<button className="btn" onClick={()=>ref.current.click()}>{t("choose")}</button>
+{step>=0&&<div className="steps">{S.map((s,i)=><span key={s} className={"chip"+(i===step?" warn":"")} style={{opacity:i>step?.4:1}}>{i<step?"✓ ":""}{t(s)}</span>)}</div>}</div>
+<p className="sub" style={{margin:"12px 0 0",fontSize:13}}>{t("proto")}</p></Card>
+{done&&<Card title={t("extr")} right={<span className="chip">{t("review")}</span>}><div className="g2">
+{fld("units","f_units","number",97)}{fld("amount","f_amt","number",95)}{fld("period","f_per","text",91)}{fld("due","f_due","text",88)}{fld("cno","f_cno","text",93)}</div>
+<button className="btn" style={{marginTop:14}} onClick={()=>{setCur(f);toast(t("toast_bill"))}}>{t("save_bill")}</button></Card>}</>}
+
+function Compare({prev,cur,A}){const {t}=useT();const du=cur.units-prev.units,da=cur.amount-prev.amount,est=A.reduce((x,a)=>x+kwh(a),0);
+const PK={"Aug 2026":"p_aug","Sep 2026":"p_sep"},tp=p=>PK[p]?t(PK[p]):p;
+const D2=({d,b,m})=><span className={d>0?"up":"dn"}>{d>0?"▲":"▼"} {m?inr(Math.abs(d)):Math.abs(d)} ({Math.abs(d/b*100).toFixed(1)}%)</span>;
+const Pair=({l,p,c,fmt})=><div style={{marginBottom:14}}><b>{l}</b>{[[t("prev"),p,"var(--line)"],[t("curr"),c,"var(--ac)"]].map(([n,v,col])=><div key={n} style={{display:"flex",alignItems:"center",gap:10,marginTop:6}}><span style={{width:62,fontSize:12,color:"var(--mut)"}}>{n}</span><div className="bar" style={{flex:1,height:12,marginTop:0}}><i style={{width:v/Math.max(p,c)*100+"%",background:col}}/></div><span style={{width:72,textAlign:"right",fontWeight:600}}>{fmt(v)}</span></div>)}</div>;
+return <><Header t={t("t_cmp")} s={tp(prev.period)+" → "+tp(cur.period)}/>
+<div className="stats"><Stat v={<D2 d={du} b={prev.units}/>} l={t("units_c")}/><Stat v={<D2 d={da} b={prev.amount} m/>} l={t("f_amt")}/><Stat v={"₹"+(cur.amount/cur.units).toFixed(2)} l={t("c_cpu")}/></div>
+<Card title={t("side")}><Pair l={t("units_c")} p={prev.units} c={cur.units} fmt={v=>v+" kWh"}/><Pair l={t("f_amt")} p={prev.amount} c={cur.amount} fmt={inr}/></Card>
+<Card title={t("match_t")}><div className="bar" style={{height:14}}><i style={{width:Math.min(100,est/cur.units*100)+"%",background:"var(--ac)"}}/></div>
+<p className="sub" style={{margin:"10px 0 0"}}>{t("match_b",Math.round(est),cur.units,Math.round(est/cur.units*100))} {est/cur.units<.85?t("gap"):t("close")}</p></Card></>}
+
+function Savings({A,tariff,toast}){const {t}=useT();const [cut,setCut]=useState({});const items=A.filter(a=>a.s);
+const save=items.reduce((s,a)=>s+a.w*(cut[a.id]||0)*30/1000*tariff,0);const T=A.reduce((x,a)=>x+kwh(a),0);
+const top=[...items].sort((a,b)=>kwh(b)-kwh(a)).slice(0,3);
+return <><Header t={t("t_sav")} s={t("s_sav")}/>
+<div className="hero" style={{gridTemplateColumns:"1fr auto"}}><div><small>{t("could")}</small><div className="big">{inr(save)}<sup>{t("per_mo")}</sup></div><p style={{margin:"8px 0 0",opacity:.85}}>{t("yr_line",inr(save*12),(save/tariff).toFixed(0))}</p></div>
+<button className="btn amb" onClick={()=>{const c={};items.forEach(a=>c[a.id]=Math.min(a.plan,a.h));setCut(c);toast(t("toast_plan"))}}>{t("smart")}</button></div>
+<Card title={t("cut_t")} right={<button className="btn soft" onClick={()=>setCut({})}>{t("reset")}</button>}>{items.map(a=>{const c=cut[a.id]||0;return <div className="row" key={a.id}><div className="ico">{a.i}</div><div className="grow"><div style={{display:"flex",justifyContent:"space-between",gap:8}}><b>{t("n"+a.id)}</b><span className={c?"dn":""}>{c?t("save_x",inr(a.w*c*30/1000*tariff)):t("no_chg")}</span></div>
+<small>{t("now_cut",a.h,c)}</small><input type="range" min="0" max={a.h} step="0.5" value={c} aria-label={t("n"+a.id)} onChange={e=>setCut({...cut,[a.id]:+e.target.value})}/></div></div>})}</Card>
+<Card title={t("tips")}>{top.map(a=><div className="row" key={a.id}><div className="ico">{a.i}</div><div className="grow"><b>{t("n"+a.id)}</b> <span className="chip warn">{t("of_use",Math.round(kwh(a)/T*100))}</span><small>{t("tip"+a.id)}</small></div></div>)}</Card></>}
+
+function App(){const [lang,setLangS]=useState(()=>{try{return localStorage.getItem("ww-lang")||"en"}catch(e){return "en"}});
+const setLang=l=>{setLangS(l);try{localStorage.setItem("ww-lang",l)}catch(e){}};
+const LI=Math.max(0,LANGS.findIndex(x=>x[0]===lang));
+const t=useCallback((k,...a)=>{let s=(D[k]||[k])[LI]||D[k][0];a.forEach((v,i)=>{s=s.replace("{"+i+"}",v)});return s},[LI]);
+useEffect(()=>{document.documentElement.lang=lang},[lang]);
+const [tab,setTab]=useState("dash"),[A,setA]=useState(INIT),[tariff,setTariff]=useState(8.5),[remOn,setRemOn]=useState(true),[toasts,setT]=useState([]);
+const [prev]=useState({units:268,amount:2410,period:"Aug 2026"}),[cur,setCur]=useState({units:312,amount:2870,period:"Sep 2026",due:"15 Oct 2026",cno:"170012345678"});
+const toast=useCallback(m=>{const id=Math.random();setT(x=>[...x,{id,m}]);setTimeout(()=>setT(x=>x.filter(y=>y.id!==id)),2200)},[]);
+const go=k=>{setTab(k);window.scrollTo(0,0)};
+const V={dash:<Dashboard A={A} tariff={tariff} go={go}/>,app:<Appliances A={A} setA={setA} tariff={tariff} setTariff={setTariff}/>,rem:<Reminders A={A} setA={setA} remOn={remOn} setRemOn={setRemOn} toast={toast} tariff={tariff}/>,bill:<BillScanner cur={cur} setCur={setCur} toast={toast}/>,cmp:<Compare prev={prev} cur={cur} A={A}/>,sav:<Savings A={A} tariff={tariff} toast={toast}/>};
+return <LC.Provider value={{lang,setLang,t}}><div className="app"><Sidebar tab={tab} go={go}/><main className="main"><div className="mtop"><Logo/><LangSwitch/></div>{V[tab]}</main><TabBar tab={tab} go={go}/>
+<div className="toasts" role="status">{toasts.map(x=><div className="toast" key={x.id}>{x.m}</div>)}</div></div></LC.Provider>}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
